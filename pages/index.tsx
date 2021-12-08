@@ -1,3 +1,4 @@
+import { Layout } from '@components/common';
 import Head from 'next/head';
 
 const Home = () => {
@@ -11,5 +12,7 @@ const Home = () => {
     </div>
   );
 };
+
+Home.Layout = Layout
 
 export default Home;
