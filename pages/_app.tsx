@@ -1,5 +1,7 @@
+import { UIProvider } from '@components/ui/uiContext'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { SessionProvider } from 'next-auth/react'
 import { FC } from 'react'
 import 'styles/globals.css'
 
@@ -16,9 +18,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap"
         />
       </Head>
-      <Layout pageProps={pageProps}>
-        <Component {...pageProps} />
-      </Layout>
+      <SessionProvider session={pageProps.session}>
+        <UIProvider>
+          <Layout pageProps={pageProps}>
+            <Component {...pageProps} />
+          </Layout>
+        </UIProvider>
+      </SessionProvider>
     </>
   )
 }

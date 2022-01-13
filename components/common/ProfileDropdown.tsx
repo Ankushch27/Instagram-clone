@@ -6,12 +6,15 @@ import {
   LogoutIcon,
   UserCircleIcon,
 } from '@heroicons/react/outline'
+import { signOut, useSession } from 'next-auth/react'
 import { FC } from 'react'
 import { Avatar } from '.'
 
 const ProfileDropdown: FC = () => {
+  const { data: session } = useSession()
+
   const menuItems = [
-    { name: 'Profile', icon: UserCircleIcon, href: '/profile' },
+    { name: 'Profile', icon: UserCircleIcon, href: `/${session?.user.username}` },
     { name: 'Saved', icon: BookmarkIcon, href: '/profile/saved' },
     { name: 'Settings', icon: CogIcon, href: '#' },
   ]
@@ -43,7 +46,8 @@ const ProfileDropdown: FC = () => {
             <button
               className={`${
                 active && 'bg-gray-100'
-              } group flex gap-3 rounded-md items-center w-full px-2 py-2 text-sm`}>
+              } group flex gap-3 rounded-md items-center w-full px-2 py-2 text-sm`}
+              onClick={() => signOut({ redirect: false })}>
               <LogoutIcon className="h-5 w-5" />
               Log Out
             </button>
