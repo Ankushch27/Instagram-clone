@@ -1,6 +1,7 @@
 import { Button, Logo } from '@components/ui'
 import { useUI } from '@components/ui/uiContext'
 import { Field, Form, Formik } from 'formik'
+import { signIn } from 'next-auth/react'
 import { FC } from 'react'
 import * as yup from 'yup'
 
@@ -22,9 +23,12 @@ const LoginView: FC = () => {
   })
 
   const login = async (values: FormValues) => {
-    setTimeout(() => {
-      console.log(values)
-    }, 2000)
+    await signIn('credentials', {
+      callbackUrl: `${window.location.origin}`,
+      redirect: false,
+      username: values.email,
+      password: values.password,
+    })
   }
 
   return (
