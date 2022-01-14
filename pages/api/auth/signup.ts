@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await client
       .db()
       .collection('users')
-      .insertOne({ ...user, password: hashedPassword })
+      .insertOne({ ...user, password: hashedPassword, followers: [], following: [] })
     res.status(201).json(result)
   } catch (error: any) {
     let errorFor = ''
