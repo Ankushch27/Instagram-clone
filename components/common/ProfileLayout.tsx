@@ -1,4 +1,5 @@
 import { Container, IconButton } from '@components/ui'
+import { useUI } from '@components/ui/uiContext'
 import { CogIcon } from '@heroicons/react/outline'
 import { CheckIcon, UserIcon } from '@heroicons/react/solid'
 import axios from 'axios'
@@ -8,7 +9,7 @@ import { FC } from 'react'
 import useSWR, { Fetcher } from 'swr'
 import { Avatar, Layout, Loading, ProfileNavbar } from '.'
 
-interface User {
+export interface User {
   email: string
   fullName: string
   _id: string
@@ -19,6 +20,7 @@ interface User {
 }
 
 const ProfileLayout: FC = ({ children }) => {
+  const { dispatch } = useUI()
   const { data: session } = useSession()
   // console.log(session)
   const { asPath } = useRouter()
@@ -53,14 +55,6 @@ const ProfileLayout: FC = ({ children }) => {
     mutate()
   }
 
-  const unfollowUser = async () => {
-    await axios.put('/api/users/unfollow', {
-      currentUsername: session?.user.username,
-      usernameToUnfollow: username,
-    })
-    mutate()
-  }
-
   return (
     <Layout>
       <div className="">
@@ -89,7 +83,15 @@ const ProfileLayout: FC = ({ children }) => {
               {isFollowing && (
                 <IconButton
                   className="!p-1 border rounded items-center"
-                  onClick={() => unfollowUser()}>
+                  onClick={() => {
+                    dispatch({ type: 'SET_MODAL_VIEW', view: 'UNFOLLOW_USER_VIEW' })
+                    dispatch({
+                      type: 'SET_USERNAME_TO_UNFOLLOW',
+                      usernameToUnfollow: username,
+                      mutate
+                    })
+                    dispatch({ type: 'OPEN_MODAL' })
+                  }}>
                   <UserIcon className="h-5 w-5" />
                   <CheckIcon className="h-4 w-4" />
                 </IconButton>

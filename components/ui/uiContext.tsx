@@ -1,15 +1,21 @@
+import { User } from '@components/common/ProfileLayout'
 import { createContext, Dispatch, FC, useContext, useReducer } from 'react'
+import { MutatorCallback } from 'swr'
 
 interface State {
   authView: AUTH_VIEWS
   modalView: MODAL_VIEWS
   displayModal: boolean
+  usernameToUnfollow: string
+  mutate: MutatorCallback<User> | undefined
 }
 
 const initialState: State = {
   authView: 'LOGIN_VIEW',
   modalView: 'POST_VIEW',
   displayModal: false,
+  usernameToUnfollow: '',
+  mutate: undefined
 }
 
 type Action =
@@ -23,10 +29,15 @@ type Action =
     }
   | { type: 'OPEN_MODAL' }
   | { type: 'CLOSE_MODAL' }
+  | {
+      type: 'SET_USERNAME_TO_UNFOLLOW'
+      usernameToUnfollow: string
+      mutate: MutatorCallback<User>
+    }
 
 type AUTH_VIEWS = 'LOGIN_VIEW' | 'SIGNUP_VIEW'
 
-type MODAL_VIEWS = 'POST_VIEW' | 'POST_OPTIONS_VIEW'
+type MODAL_VIEWS = 'POST_VIEW' | 'POST_OPTIONS_VIEW' | 'UNFOLLOW_USER_VIEW'
 
 interface ContextProps {
   state: State
@@ -57,6 +68,12 @@ const UIReducer = (state: State, action: Action) => {
       return {
         ...state,
         displayModal: false,
+      }
+    case 'SET_USERNAME_TO_UNFOLLOW':
+      return {
+        ...state,
+        usernameToUnfollow: action.usernameToUnfollow,
+        mutate: action.mutate
       }
   }
 }

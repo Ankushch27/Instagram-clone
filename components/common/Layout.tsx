@@ -8,7 +8,7 @@ import {
   PaperAirplaneIcon,
 } from '@heroicons/react/outline'
 import { FC } from 'react'
-import { Navbar } from '.'
+import { Navbar, UnfollowUserView } from '.'
 
 const navLinks = [
   { href: '/', icon: HomeIcon },
@@ -22,14 +22,22 @@ const Layout: FC = ({ children }) => {
     state: { modalView },
   } = useUI()
 
+  const getModalView = () => {
+    switch (modalView) {
+      case 'POST_VIEW':
+        return <PostSingleView />
+      case 'POST_OPTIONS_VIEW':
+        return <PostOptionsView />
+      case 'UNFOLLOW_USER_VIEW':
+        return <UnfollowUserView />
+    }
+  }
+
   return (
     <div>
       <Navbar links={navLinks} />
       <main className="">{children}</main>
-      <Modal>
-        {modalView === 'POST_VIEW' && <PostSingleView />}
-        {modalView === 'POST_OPTIONS_VIEW' && <PostOptionsView />}
-      </Modal>
+      <Modal>{getModalView()}</Modal>
     </div>
   )
 }
